@@ -1,9 +1,9 @@
 # Auto Flight ML-Agents based on Camera
-This Drone Autonomous Flight based on Camera using Unity ML Agent.
-본 프로젝트는 Camera를 활용한 Unity ML Agent 기반 머신러닝을 이용한 드론 자율비행 시스템으로, 장애물(사물)을 회피하여 목적지까지 자율적으로 비행하는 시스템이다. Camera를 이용하여 장애물(사물)을 탐지하고, 탐지한 장애물(사물)의 거리정보를 기반으로 Unity ML Agent Package를 이용하여 PPO(Proximal Policy Optimization) 기반의 머신러닝을 수행하여, 드론 비행 시 발생하는 장애물에 대한 회피 알고리즘을 제안하고, 테스트환경에서 수행한 뒤 성능을 확인한다.
+This Drone Autonomous Flight based on Camera using Unity ML Agent.  
+드론 자율비행 기술 중 장애물 회피는 드론이나 주변 환경의 손상을 방지하고 위험을 예방할 수 있도록 하는 매우 중요한 기술이다. LiDAR 센서 기반 장애물 회피방식은 비교적 높은 정확도를 보여 최근 연구에서 많이 활용되고 있지만, 단가가 높고 시각 정보에 대한 처리 능력이 제한적인 단점이 있다. 따라서 본 논문은 단가가 상대적으로 저렴 하고 시각 정보를 이용한 확장성이 높은 카메라 기반 PPO(Proximal Policy Optimization) 강화학습을 이용한 드론의 장애물 회피 알고리즘을 제안한다. 3차원 공간상의 학습환경에서 드론, 장애물, 목표지점 등을 무작위로 위치시키고, 가상 카메라를 이용하여 전면에 설치된 스테레오 카메라를 통해 스테레오 영상정보를 얻은 다음 YOLOv4Tiny 객체 검출을 수행한다. 그리고 난 후 스테레오 카메라의 삼각측량법을 통해 드론과 검출된 객체간의 거리를 측정한다. 이거리를 기반으로 장애물 유무를 판단하고, 만약 장애물이면 패널티를 책정하고 목표지점이면 보상을 부여한다. 본 방법을 실험한 결과 카메라 기반 장애물 회피 알고리즘은 LiDAR 기반 장애물 회피 알고리즘과 비교하여 충분히 비슷한 수준의 높은 정확도와 평균 목표지점 도달시간을 보여 활용 가능성이 높음을 알 수 있었다.
 - [Unity ML-Agent](https://github.com/Unity-Technologies/ml-agents): https://github.com/Unity-Technologies/ml-agents
 - [YOLOv4 Tiny Barracuda](https://github.com/keijiro/YoloV4TinyBarracuda): https://github.com/keijiro/YoloV4TinyBarracuda
-
+- 연구논문: [카메라 기반 강화학습을 이용한 드론 장애물 회피 알고리즘](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002782747)
 
 
 
@@ -186,11 +186,10 @@ xL과 xR은 카메라 이미지의 PL과 PR에 대응하는 왼쪽과 오른쪽�
 <p align="center"><img width="75%" src="Images/Anaconda_LidarFlight_003.PNG" /></p>
 <p align="center"><img width="75%" src="Images/Anaconda_LidarFlight_004.PNG" /></p>
 
-- In the image above, the LiDAR_Flight_Bak1.yaml file is recycled.  
+- In the image above, the AutoFlight_Bak1.yaml file is recycled.  
 - If you made StereoFlight.yaml file, you can use the above command.  
 
 
-------------여기부터 수정필요
 ### 3. 4 Training Result
 
 <p align="center"><img width="100%" src="https://user-images.githubusercontent.com/59362257/151128795-5142eab1-a63d-49a8-95ce-63a94f90699f.png" /></p>
@@ -205,56 +204,40 @@ xL과 xR은 카메라 이미지의 PL과 PR에 대응하는 왼쪽과 오른쪽�
 
 
 ## 4. Run
-Run 5 times of the model trained above, 100 times each for the following two environments.  
+Run 5 times of the model trained above, 100 times each for the following environments.  
 
-### 4. 1 TEST01
-- 원기둥 형태의 장애물 20개를 배치한 1km 길이의 일자형 트랙  
-
-<p align="center"><img width="75%" src="Images/Test_001.jpg" /></p>
-
-- Tried 100 times.
-- Achieved about 24s Average Time.
-- Achieved 96% Accuracy.
-
-### 4. 2 TEST02
+### 4. 1 Test Result
 - 사물 형태의 장애물 244개를 배치한 1km 길이의 일자형 트랙  
 
-<p align="center"><img width="75%" src="Images/Test_002.png" /></p>
+| Test |Accuracy| Time |
+|:----:|:------:|:----:|
+|Test 1| 90.00% |28.93s|
+|Test 2| 85.00% |28.87s|
+|Test 3| 88.00% |28.94s|
+|Test 4| 87.00% |28.96s|
+|Test 5| 88.00% |28.94s|
 
-- Tried 100 times.
-- Achieved about 24s Average Time.
-- Achieved 86% Accuracy.
+- Tried 100 times each.  
+- Achieved about 28.93s Average Time.  
+- Achieved about 87.60% Average Accuracy.  
 
-### 4. 3 Test Result
-![image](https://user-images.githubusercontent.com/59362257/151134061-5691f52a-f670-4276-a49e-2001b75375f1.png)
-![image](https://user-images.githubusercontent.com/59362257/151134068-dbd46353-d922-4a0b-8c5e-4f399fe240e1.png)
 
-|Classification|Environment1|Environment2|
-|---|---|---|
-|Average Accuracy|94.00%|87.20%|
-|Average Time|24.00s|24.15s|
+### 4. 2 Compare to the LiDAR based system  
 
-- 환경에 따라 다소의 차이는 있으나, 대체로 목적지를 찾아가는 것을 확인
-- 한 번의 학습으로 학습되지 않은 환경에서도 자율비행 가능
+![image](https://user-images.githubusercontent.com/59362257/151653290-250ab707-27df-48c1-adec-66a966cb8f65.png)
 
-### 4. 4 Demo Simulation
+| Classification |Camera| LiDAR|
+|:--------------:|:----:|:----:|
+|Average Accuracy|87.60%|87.20%|
+|  Average Time  |28.93s|24.15s|
 
-<p align="center"><img width="75%" src="Images/Demo_001.png" /></p>
-<p align="center"><img width="75%" src="Images/Demo_002.jpg" /></p>
-<p align="center"><img width="75%" src="Images/Demo_003.jpg" /></p>
+- 충분히 비슷한 수준의 성능 확인
+- 카메라를 이용한 자율비행의 가능성 확인
 
-- Tried 100 times.
-- Achieved about 11.5s Average Time.
-- Achieved 89% Accuracy.
+
+
 
 
 ## 5. Results
 
-- 정확도  
-  학습되지 않은 환경에서도 높은 정확도를 보임  
-- 속도  
-  동일거리에 대해 항상 일정한 속도로 목표지점 도달  
-- 목적 달성의 용이성  
-  강화학습은 목적에 따라 적절한 보상설계를 통해 효율적으로 목적 달성 가능  
-- 한 번의 학습으로 학습되지 않은 환경에서도 자율비행 가능  
-  한정된 자원으로 여러 다른 문제 해결 가능  
+본 논문은 단가가 상대적으로 저렴하고 시각 정보를 이용한 확장성이 높은 카메라 기반의 PPO 강화학습을 이용한 드론의 장애물 회피 알고리즘을 제안한다. YOLOv4Tiny를 활용한 객체검출을 통해 장애물을 검출하고 스테레오 카메라의 기하학적 해석에 따른 삼각측량 거리측정에 따라 장애물을 회피하는 분산강화학습을 통해 자율비행을 구현하는 방법을 제시한다. 실험결과 카메라 기반 장애물 회피 알고리즘은 평균 정확도 87.60%, 평균 목표지점 도달시간 28.93s를 보였고, LiDAR 기반 장애물 회피 알고리즘은 평균 정확도 87.20%, 평균 목표지점 도달시간 24.15s을 보여 카메라 기반 장애물 회피 알고리즘도 높은 정확도와 평균 목표지점 도달시간을 보임을 알 수 있었다. 위의 결과를 바탕으로 장애물 회피 자율비행 강화학습에서 단가가 높은 LiDAR 센서 대신 카메라가 사용될 수 있는 가능성을 확인했다.
